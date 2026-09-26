@@ -1,0 +1,12 @@
+{
+  "name": "nivora-trade",
+  "version": "7.0.0",
+  "description": "NIVORA Trading dashboard - paper/backtest mode",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.21.2"
+  }
+}
