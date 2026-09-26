@@ -1,25 +1,88 @@
-f<!doctype html>
+<!doctype html>
 <html lang="it">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>NIVORA Trade</title>
+
 <style>
-body{font-family:Arial,sans-serif;margin:0;background:#0f172a;color:#e2e8f0}
-main{max-width:900px;margin:40px auto;padding:20px}
-.card{background:#1e293b;border-radius:14px;padding:22px;margin:16px 0}
-h1{margin-bottom:4px}.muted{color:#94a3b8}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}
-label{display:block;font-size:13px;color:#94a3b8;margin-bottom:5px}
-input,button{width:100%;box-sizing:border-box;padding:11px;border-radius:8px;border:1px solid #475569;background:#0f172a;color:#fff}
-button{cursor:pointer;background:#334155}
-.badge{display:inline-block;padding:6px 10px;border-radius:999px;background:#334155}
+body{
+  font-family:Arial,sans-serif;
+  margin:0;
+  background:#0f172a;
+  color:#e2e8f0;
+}
+main{
+  max-width:900px;
+  margin:40px auto;
+  padding:20px;
+}
+.card{
+  background:#1e293b;
+  border-radius:14px;
+  padding:22px;
+  margin:16px 0;
+}
+h1{
+  margin-bottom:4px;
+}
+.muted{
+  color:#94a3b8;
+}
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+  gap:12px;
+}
+.label{
+  display:block;
+  font-size:14px;
+  color:#94a3b8;
+  margin-bottom:5px;
+}
+input,button{
+  width:100%;
+  box-sizing:border-box;
+  padding:11px;
+  border-radius:8px;
+  border:1px solid #475569;
+}
+input{
+  background:#0f172a;
+  color:#e2e8f0;
+}
+button{
+  cursor:pointer;
+  background:#334155;
+  color:white;
+  margin-top:12px;
+}
+button:hover{
+  background:#475569;
+}
+.badge{
+  display:inline-block;
+  padding:6px 10px;
+  border-radius:999px;
+  background:#334155;
+}
+.result{
+  white-space:pre-line;
+  margin-top:12px;
+  color:#cbd5e1;
+}
 </style>
 </head>
+
 <body>
+
 <main>
+
 <h1>NIVORA Trade</h1>
-<div class="muted">Dashboard V7 — paper/backtest mode</div>
+
+<div class="muted">
+Dashboard V7 — paper/backtest mode
+</div>
 
 <div class="card">
   <span class="badge">PAPER MODE</span>
@@ -27,40 +90,128 @@ button{cursor:pointer;background:#334155}
 </div>
 
 <div class="card">
+
 <h2>Regole operative</h2>
+
 <div class="grid">
-<div>Rischio massimo<br><strong>1%</strong></div>
-<div>Posizioni simultanee<br><strong>1</strong></div>
-<div>Martingala<br><strong>NO</strong></div>
-<div>Leva<br><strong>NO</strong></div>
+
+<div>
+<strong>Rischio massimo</strong>
+<br>1%
 </div>
+
+<div>
+<strong>Posizioni simultanee</strong>
+<br>1
+</div>
+
+<div>
+<strong>Martingala</strong>
+<br>NO
+</div>
+
+<div>
+<strong>Leva</strong>
+<br>NO
+</div>
+
+</div>
+
 </div>
 
 <div class="card">
+
 <h2>Calcolo rischio</h2>
+
 <div class="grid">
-<div><label>Capitale</label><input id="balance" type="number" value="1000"></div>
-<div><label>Prezzo ingresso</label><input id="entry" type="number" value="100"></div>
-<div><label>Stop loss</label><input id="stop" type="number" value="98"></div>
+
+<div>
+<label class="label" for="balance">Capitale</label>
+<input id="balance" type="number" value="1000" min="0" step="0.01">
 </div>
-<p><button onclick="calc()">Calcola</button></p>
-<pre id="out"></pre>
+
+<div>
+<label class="label" for="entry">Prezzo ingresso</label>
+<input id="entry" type="number" value="100" min="0" step="0.01">
 </div>
+
+<div>
+<label class="label" for="stop">Stop loss</label>
+<input id="stop" type="number" value="98" min="0" step="0.01">
+</div>
+
+</div>
+
+<button onclick="calc()">Calcola</button>
+
+<pre id="out" class="result"></pre>
+
+</div>
+
 </main>
+
 <script>
-async function calc(){
- const body={
-  balance:Number(balance.value),
-  entry:Number(entry.value),
-  stop:Number(stop.value)
- };
- const r=await fetch('/api/risk',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
- const d=await r.json();
- out.textContent=r.ok
- ? `Rischio massimo: €${d.riskMoney.toFixed(2)}\nRischio per unità: ${d.riskPerUnit.toFixed(4)}\nQuantità teorica: ${d.quantity.toFixed(4)}`
- : d.error;
+
+function calc(){
+
+  const balance = Number(
+    document.getElementById("balance").value
+  );
+
+  const entry = Number(
+    document.getElementById("entry").value
+  );
+
+  const stop = Number(
+    document.getElementById("stop").value
+  );
+
+  const out = document.getElementById("out");
+
+  if(
+    !Number.isFinite(balance) ||
+    !Number.isFinite(entry) ||
+    !Number.isFinite(stop) ||
+    balance <= 0 ||
+    entry <= 0 ||
+    stop <= 0
+  ){
+    out.textContent = "Inserisci valori validi.";
+    return;
+  }
+
+  if(stop >= entry){
+    out.textContent =
+      "Per questa modalità lo stop loss deve essere inferiore al prezzo di ingresso.";
+    return;
+  }
+
+  const maxRisk = balance * 0.01;
+
+  const riskPerUnit = entry - stop;
+
+  const theoreticalQuantity =
+    maxRisk / riskPerUnit;
+
+  const positionValue =
+    theoreticalQuantity * entry;
+
+  out.textContent =
+    "Rischio massimo: €" +
+    maxRisk.toFixed(2) +
+    "\n" +
+    "Rischio per unità: €" +
+    riskPerUnit.toFixed(4) +
+    "\n" +
+    "Quantità teorica: " +
+    theoreticalQuantity.toFixed(4) +
+    "\n" +
+    "Valore posizione teorico: €" +
+    positionValue.toFixed(2);
+
 }
+
 </script>
+
 </body>
 </html>
-
