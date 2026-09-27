@@ -138,6 +138,10 @@ Dashboard V7 — paper/backtest mode
 <div>
 <label class="label" for="stop">Stop loss</label>
 <input id="stop" type="number" value="98" min="0" step="0.01">
+<div>
+<label class="label" for="target">Take profit</label>
+<input id="target" type="number" value="104" min="0" step="0.01">
+</div>
 </div>
 
 </div>
@@ -165,51 +169,64 @@ function calc(){
   const stop = Number(
     document.getElementById("stop").value
   );
+const target = Number(
+document.getElementById("target").value
+);
 
   const out = document.getElementById("out");
 
-  if(
-    !Number.isFinite(balance) ||
-    !Number.isFinite(entry) ||
-    !Number.isFinite(stop) ||
-    balance <= 0 ||
-    entry <= 0 ||
-    stop <= 0
-  ){
-    out.textContent = "Inserisci valori validi.";
-    return;
-  }
-
-  if(stop >= entry){
-    out.textContent =
-      "Per questa modalità lo stop loss deve essere inferiore al prezzo di ingresso.";
-    return;
-  }
-
-  const maxRisk = balance * 0.01;
-
-  const riskPerUnit = entry - stop;
-
-  const theoreticalQuantity =
-    maxRisk / riskPerUnit;
-
-  const positionValue =
-    theoreticalQuantity * entry;
-
-  out.textContent =
-    "Rischio massimo: €" +
-    maxRisk.toFixed(2) +
-    "\n" +
-    "Rischio per unità: €" +
-    riskPerUnit.toFixed(4) +
-    "\n" +
-    "Quantità teorica: " +
-    theoreticalQuantity.toFixed(4) +
-    "\n" +
-    "Valore posizione teorico: €" +
-    positionValue.toFixed(2);
-
+ if(
+!Number.isFinite(balance) ||
+!Number.isFinite(entry) ||
+!Number.isFinite(stop) ||
+!Number.isFinite(target) ||
+balance <= 0 ||
+entry <= 0 ||
+stop <= 0 ||
+target<= 0
+){
+out.textContent = "Inserisci valori validi.";
+return;
 }
+
+if(stop >= entry){+
+out.textContent =
+"Per questa modalità lo stop loss deve essere inferiore al prezzo di ingresso.";
+ritorno;
+}
+
+if(target <= entry){
+out.textContent =
+"Il Take profit deve essere superiore al prezzo di ingresso.";
+return;
+}
+
+const maxRisk = balance * 0.01;
+const riskPerUnit = entry - stop;
+const quantitàteorica = rischio massimo / rischioPerUnità;
+
+const positionValue = theoreticalQuantity * entry;
+const potenzialeProfitto =
+Quantità teorica * (obiettivo - valore iniziale);
+
+const rischioRicompensa =
+Potenziale profitto / massimo rischio;
+
+out.textContent =
+"Rischio massimo: €" +
+maxRisk.toFixed(2) + "\n" +
+"Rischio per unità: €" +
+rischioPerUnità.Fisso(2) + "\n" +
+"Quantità teorica: " +
+theoreticalQuantity.toFixed(2) + "\n" +
+"Valore posizione teorica: €" +
+positionValue.toFixed(2) + "\n" +
+"Profitto potenziale: €" +
+potentialProfit.toFixed(2) + "\n" +
+"Rischio/Ricompensa: 1:" +
+rischioRicompensa.Fisso(2);
+}
+
 
 </script>
 
