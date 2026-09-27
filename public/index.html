@@ -202,29 +202,28 @@ return;
 }
 
 const maxRisk = balance * 0.01;
-const riskPerUnit = entry - stop;
-const quantitàteorica = rischio massimo / rischioPerUnità;
+const rischioPerUnita = entry - stop;
+const quantitaTeorica = maxRisk / rischioPerUnita;
 
-const positionValue = theoreticalQuantity * entry;
-const potenzialeProfitto =
-Quantità teorica * (obiettivo - valore iniziale);
+const positionValue = quantitaTeorica * entry;
+const potenzialeProfitto = quantitaTeorica * (target - entry);
 
-const rischioRicompensa =
-Potenziale profitto / massimo rischio;
+const rischioRicompensa = potenzialeProfitto / maxRisk;
 
 out.textContent =
 "Rischio massimo: €" +
 maxRisk.toFixed(2) + "\n" +
 "Rischio per unità: €" +
-rischioPerUnità.Fisso(2) + "\n" +
+rischioPerUnita.toFixed(2) + "\n" +
 "Quantità teorica: " +
-theoreticalQuantity.toFixed(2) + "\n" +
+quantitaTeorica.toFixed(2) + "\n" +
 "Valore posizione teorica: €" +
 positionValue.toFixed(2) + "\n" +
 "Profitto potenziale: €" +
-potentialProfit.toFixed(2) + "\n" +
+potenzialeProfitto.toFixed(2) + "\n" +
 "Rischio/Ricompensa: 1:" +
-rischioRicompensa.Fisso(2);
+rischioRicompensa.toFixed(2);
++SS
 }
 
 
